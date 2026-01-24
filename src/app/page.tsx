@@ -41,6 +41,10 @@ const SETTINGS = [
   { id: "dinosaur-age", name: "Dinosaur Age", emoji: "🦖" },
   { id: "airplanes", name: "Airplanes", emoji: "✈️" },
   { id: "ancient-egypt", name: "Ancient Egypt", emoji: "🏺" },
+  { id: "zoo", name: "The Zoo", emoji: "🦁" },
+  { id: "brooklyn", name: "Brooklyn", emoji: "🗽" },
+  { id: "eiffel-tower", name: "Eiffel Tower", emoji: "🇫🇷" },
+  { id: "rollercoaster", name: "Rollercoaster", emoji: "🎢" },
 ];
 
 type GenerationStatus = "idle" | "thinking" | "painting" | "done" | "error";
@@ -357,7 +361,7 @@ export default function Home() {
           </button>
 
           {settingsExpanded && (
-            <div className="p-4 grid grid-cols-3 gap-3">
+            <div className="p-4 grid grid-cols-4 gap-3">
               {SETTINGS.map((setting) => {
                 const isSelected = selectedSetting === setting.id;
 
@@ -366,7 +370,7 @@ export default function Home() {
                     key={setting.id}
                     onClick={() => selectSetting(setting.id)}
                     className={`
-                      w-20 h-20 rounded-full flex items-center justify-center text-4xl
+                      w-16 h-16 rounded-full flex items-center justify-center text-3xl
                       transition-all duration-200 border-4
                       ${
                         isSelected

@@ -53,6 +53,10 @@ var settings = map[string]string{
 	"dinosaur-age":  "prehistoric times with dinosaurs and volcanoes",
 	"airplanes":     "flying airplanes high up in the sky among the clouds",
 	"ancient-egypt": "ancient Egypt with pyramids and sphinx",
+	"zoo":           "a fun day at the zoo with animal enclosures and happy visitors",
+	"brooklyn":      "the streets of Brooklyn with brownstone buildings and city life",
+	"eiffel-tower":  "Paris with the Eiffel Tower in the background",
+	"rollercoaster": "a thrilling rollercoaster park with exciting rides and attractions",
 }
 
 type GenerateRequest struct {
