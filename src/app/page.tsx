@@ -37,6 +37,11 @@ const SETTINGS = [
 
 type GenerationStatus = "idle" | "thinking" | "painting" | "done" | "error";
 
+interface GeneratedImage {
+  image: string;
+  scenario: string;
+}
+
 export default function Home() {
   const [selectedCharacters, setSelectedCharacters] = useState<string[]>([]);
   const [selectedSetting, setSelectedSetting] = useState<string | null>(null);
@@ -47,6 +52,9 @@ export default function Home() {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [scenario, setScenario] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Recent images carousel (max 10)
+  const [recentImages, setRecentImages] = useState<GeneratedImage[]>([]);
 
   const toggleCharacter = (id: string) => {
     setSelectedCharacters((prev) => {
@@ -109,6 +117,12 @@ export default function Home() {
       setGeneratedImage(data.image);
       setScenario(data.scenario);
       setStatus("done");
+
+      // Add to recent images (keep max 10, newest first)
+      setRecentImages((prev) => {
+        const newImages = [{ image: data.image, scenario: data.scenario }, ...prev];
+        return newImages.slice(0, 10);
+      });
     } catch (err: any) {
       isActive = false;
       clearTimeout(timer);
@@ -122,6 +136,12 @@ export default function Home() {
     setGeneratedImage(null);
     setScenario(null);
     setError(null);
+  };
+
+  const handleSelectRecent = (item: GeneratedImage) => {
+    setGeneratedImage(item.image);
+    setScenario(item.scenario);
+    setStatus("done");
   };
 
   return (
@@ -200,12 +220,41 @@ export default function Home() {
         </div>
 
         {/* Debug: Generated Prompt */}
-        {scenario && (
-          <div className="w-full max-w-2xl bg-gray-100 rounded-xl p-3 text-sm text-gray-600">
-            <p className="font-bold text-gray-500 text-xs mb-1">Generated Prompt:</p>
-            <p>{scenario}</p>
+        <div className="w-full max-w-2xl bg-gray-100 rounded-xl p-3 text-sm text-gray-600 h-20 overflow-y-auto">
+          <p className="font-bold text-gray-500 text-xs mb-1">Generated Prompt:</p>
+          <p>{scenario || <span className="text-gray-400 italic">No prompt yet...</span>}</p>
+        </div>
+
+        {/* Recent Images Carousel */}
+        <div className="w-full max-w-2xl">
+          <p className="text-sm text-gray-500 mb-2 font-bold">Recent Pictures:</p>
+          <div className="flex gap-2 overflow-x-auto pb-2 min-h-[5.5rem]">
+            {recentImages.length > 0 ? (
+              recentImages.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSelectRecent(item)}
+                  className={`
+                    flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-3
+                    transition-all hover:scale-105
+                    ${generatedImage === item.image
+                      ? "border-kid-teal ring-2 ring-kid-teal ring-offset-1"
+                      : "border-gray-200 hover:border-kid-purple/50"
+                    }
+                  `}
+                >
+                  <img
+                    src={item.image}
+                    alt={`Recent image ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))
+            ) : (
+              <p className="text-gray-400 italic text-sm">No pictures yet...</p>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Selection Panel */}
