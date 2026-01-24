@@ -1,0 +1,16 @@
+[Unit]
+Description=Imagine - Kids Image Generation App
+After=network.target
+
+[Service]
+Type=simple
+User=exedev
+WorkingDirectory=/home/exedev/imagine
+ExecStart=/home/exedev/imagine/bin/imagine
+Restart=always
+RestartSec=5
+Environment=PORT=8080
+EnvironmentFile=/home/exedev/imagine/.env
+
+[Install]
+WantedBy=multi-user.target

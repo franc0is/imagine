@@ -6,9 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:characters": "tsx scripts/generate-character-images.ts",
+    "generate:settings": "tsx scripts/generate-setting-images.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
+    "@google/generative-ai": "^0.24.1",
     "next": "16.1.4",
     "react": "19.2.3",
     "react-dom": "19.2.3"
@@ -21,6 +25,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
