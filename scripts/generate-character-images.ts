@@ -39,9 +39,29 @@ const CHARACTERS = [
     prompt: "Ghost-Spider from Spidey and His Amazing Friends, young girl hero in white and pink spider suit with hood",
   },
   {
+    id: "trace-e",
+    name: "Trace-E",
+    prompt: "Trace-E robot from Spidey and His Amazing Friends, small cute friendly robot spider with round body and big eyes",
+  },
+  {
+    id: "goby",
+    name: "Goby",
+    prompt: "Goby from Spidey and his amazing friends",
+  },
+  {
     id: "curious-george",
     name: "Curious George",
     prompt: "Curious George, cute friendly brown monkey with big curious eyes, classic cartoon style",
+  },
+  {
+    id: "pete-the-cat",
+    name: "Pete the Cat",
+    prompt: "Pete the Cat, cool blue cat with yellow eyes wearing red sneakers, groovy and relaxed pose",
+  },
+  {
+    id: "brother-bear",
+    name: "Brother Bear",
+    prompt: "Brother Bear from the Berenstain Bears",
   },
   {
     id: "snoopy",
@@ -52,6 +72,21 @@ const CHARACTERS = [
     id: "charlie-brown",
     name: "Charlie Brown",
     prompt: "Charlie Brown from Peanuts, young boy with round head, yellow shirt with black zigzag stripe, friendly smile",
+  },
+  {
+    id: "elmo",
+    name: "Elmo",
+    prompt: "Elmo from Sesame Street, cute furry red monster with big orange nose and googly eyes, happy and friendly",
+  },
+  {
+    id: "iron-man",
+    name: "Iron Man",
+    prompt: "Iron Man from Marvel, superhero in shiny red and gold metal armor suit, heroic pose",
+  },
+  {
+    id: "hulk",
+    name: "Hulk",
+    prompt: "Hulk from Marvel, big green muscular superhero with torn purple pants, friendly expression for kids",
   },
   {
     id: "wallace",
@@ -78,9 +113,9 @@ async function generateCharacterImages() {
 
   const genAI = new GoogleGenerativeAI(apiKey);
 
-  // Use Gemini 2.0 Flash image generation model
+  // Use Gemini 3 Pro image generation model
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash-exp-image-generation",
+    model: "gemini-3-pro-image-preview",
     generationConfig: {
       responseModalities: ["image", "text"],
     } as any,

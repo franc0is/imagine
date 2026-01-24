@@ -25,9 +25,17 @@ var characters = map[string]string{
 	"spidey":         "Spidey (from Spidey and His Amazing Friends), a young kid Spider-Man in red and blue suit",
 	"spin":           "Spin (from Spidey and His Amazing Friends), a young spider hero in black and red suit",
 	"ghost-spider":   "Ghost-Spider (from Spidey and His Amazing Friends), a young girl spider hero in white and pink suit with hood",
+	"trace-e":        "Trace-E (from Spidey and His Amazing Friends), a small friendly robot spider with a round body",
+	"goby":           "Gobby (from Spidey and His Amazing Friends), a young mischievious green goblin",
 	"curious-george": "Curious George (from Curious George), a friendly little brown monkey",
+	"pete-the-cat":   "Pete the Cat (from Pete the Cat), a cool blue cat who loves music and wears sneakers",
+	"brother-bear":   "Brother Bear (from Berenstain Bears), a young bear cub in red shirt and blue pants",
+	"bluey":          "Bluey (from Bluey), a blue heeler puppy who loves to play",
 	"snoopy":         "Snoopy (from Peanuts), a white beagle dog with black ears",
 	"charlie-brown":  "Charlie Brown (from Peanuts), a boy with a round head and yellow zigzag shirt",
+	"elmo":           "Elmo (from Sesame Street), a furry red monster with an orange nose who speaks in third person",
+	"iron-man":       "Iron Man (from Marvel), a superhero in red and gold metal armor suit",
+	"hulk":           "Hulk (from Marvel), a big green muscular superhero with torn purple pants",
 	"wallace":        "Wallace (from Wallace and Gromit), a British man inventor with a big nose",
 	"gromit":         "Gromit (from Wallace and Gromit), a clever brown/tan dog",
 }
@@ -165,17 +173,26 @@ func handleGenerate(w http.ResponseWriter, r *http.Request) {
 	defer client.Close()
 
 	// Build character descriptions
+	log.Printf("DEBUG: Received characters: %v", req.Characters)
+	log.Printf("DEBUG: Received setting: %s", req.Setting)
 	var charDescs []string
 	for _, id := range req.Characters {
 		if desc, ok := characters[id]; ok {
+			log.Printf("DEBUG: Found character %s -> %s", id, desc)
 			charDescs = append(charDescs, desc)
+		} else {
+			log.Printf("DEBUG: Character %s NOT FOUND in map", id)
 		}
 	}
 	characterDescriptions := strings.Join(charDescs, ", ")
+	log.Printf("DEBUG: Final character descriptions: %s", characterDescriptions)
 
 	settingDescription := settings[req.Setting]
 	if settingDescription == "" {
 		settingDescription = req.Setting
+		log.Printf("DEBUG: Setting %s NOT FOUND, using raw value", req.Setting)
+	} else {
+		log.Printf("DEBUG: Found setting %s -> %s", req.Setting, settingDescription)
 	}
 
 	// Step 1: Generate scenario using text model
@@ -209,7 +226,7 @@ Respond with ONLY the scene description, nothing else.`, characterDescriptions, 
 
 %s
 
-Style: Bright, cheerful cartoon illustration for young children. Friendly characters, vibrant colors, simple shapes, whimsical and magical feeling. Safe and appropriate for kids. Do not include any text or words in the image.`, scenario)
+Style: Bright, cheerful cartoon illustration for children. Safe and appropriate for kids. Do not include any text or words in the image.`, scenario)
 
 	imageBase64, err := generateImageRaw(apiKey, imagePrompt)
 	if err != nil {
