@@ -209,7 +209,7 @@ Respond with ONLY the scene description, nothing else.`, characterDescriptions, 
 
 %s
 
-Style: Bright, cheerful cartoon illustration for young children. Friendly characters, vibrant colors, simple shapes, whimsical and magical feeling. Safe and appropriate for kids.`, scenario)
+Style: Bright, cheerful cartoon illustration for young children. Friendly characters, vibrant colors, simple shapes, whimsical and magical feeling. Safe and appropriate for kids. Do not include any text or words in the image.`, scenario)
 
 	imageBase64, err := generateImageRaw(apiKey, imagePrompt)
 	if err != nil {
