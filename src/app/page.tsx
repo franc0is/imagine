@@ -170,6 +170,52 @@ export default function Home() {
     setStatus("done");
   };
 
+  const handlePrint = () => {
+    if (!generatedImage) return;
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Print Picture</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              background: white;
+            }
+            img {
+              max-width: 100%;
+              max-height: 100vh;
+              object-fit: contain;
+            }
+            @media print {
+              body {
+                display: block;
+                padding: 0;
+              }
+              img {
+                max-width: 100%;
+                max-height: 100%;
+                page-break-inside: avoid;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <img src="${generatedImage}" alt="Generated picture" />
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row p-4 gap-4 no-select">
       {/* Canvas Area */}
@@ -220,13 +266,22 @@ export default function Home() {
                 alt="Generated scene"
                 className="w-full h-full object-contain"
               />
-              <button
-                onClick={handleReset}
-                className="absolute top-4 right-4 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
-                title="Make another"
-              >
-                <span className="text-2xl">🔄</span>
-              </button>
+              <div className="absolute top-4 right-4 flex gap-2">
+                <button
+                  onClick={handlePrint}
+                  className="bg-white/80 hover:bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
+                  title="Print"
+                >
+                  <span className="text-2xl">🖨️</span>
+                </button>
+                <button
+                  onClick={handleReset}
+                  className="bg-white/80 hover:bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
+                  title="Make another"
+                >
+                  <span className="text-2xl">🔄</span>
+                </button>
+              </div>
             </>
           )}
 
