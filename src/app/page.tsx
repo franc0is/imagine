@@ -22,7 +22,7 @@ const CHARACTERS = [
   { id: "charlie-brown", name: "Charlie", image: "/characters/charlie-brown.png" },
   { id: "elmo", name: "Elmo", image: "/characters/elmo.png" },
   { id: "iron-man", name: "Iron Man", image: "/characters/iron-man.png" },
-  { id: "hulk", name: "Hulk", image: "/characters/hulk.png" },
+  { id: "santa", name: "Santa", image: "/characters/santa.png" },
   { id: "wallace", name: "Wallace", image: "/characters/wallace.png" },
   { id: "gromit", name: "Gromit", image: "/characters/gromit.png" },
 ];
@@ -32,7 +32,7 @@ const SETTINGS = [
   { id: "castle", name: "Castle", emoji: "🏰" },
   { id: "space", name: "Space", emoji: "🚀" },
   { id: "underwater", name: "Underwater", emoji: "🌊" },
-  { id: "forest", name: "Forest", emoji: "🌲" },
+  { id: "north-pole", name: "North Pole", emoji: "🎅" },
   { id: "playground", name: "Playground", emoji: "🎠" },
   { id: "rainbow-land", name: "Rainbow Land", emoji: "🌈" },
   { id: "highway", name: "Highway", emoji: "🚗" },

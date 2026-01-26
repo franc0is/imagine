@@ -35,7 +35,7 @@ var characters = map[string]string{
 	"charlie-brown":  "Charlie Brown (from Peanuts), a boy with a round head and yellow zigzag shirt",
 	"elmo":           "Elmo (from Sesame Street), a furry red monster with an orange nose who speaks in third person",
 	"iron-man":       "Iron Man (from Marvel), a superhero in red and gold metal armor suit",
-	"hulk":           "Hulk (from Marvel), a big green muscular superhero with torn purple pants",
+	"santa":          "Santa Claus, a jolly man with a white beard in a red suit who delivers presents",
 	"wallace":        "Wallace (from Wallace and Gromit), a British man inventor with a big nose",
 	"gromit":         "Gromit (from Wallace and Gromit), a clever brown/tan dog",
 }
@@ -44,7 +44,7 @@ var settings = map[string]string{
 	"castle":        "a magical castle with tall towers and colorful flags",
 	"space":         "outer space with colorful planets and twinkling stars",
 	"underwater":    "an underwater ocean scene with coral reefs and colorful fish",
-	"forest":        "an enchanted forest with tall trees and magical mushrooms",
+	"north-pole":    "Santa's workshop at the North Pole with snow, elves, and presents",
 	"playground":    "a colorful playground with slides and swings on a sunny day",
 	"rainbow-land":  "a magical rainbow land with cotton candy clouds",
 	"highway":       "driving vehicles down a busy highway with cars and trucks",
