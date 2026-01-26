@@ -62,10 +62,6 @@ func main() {
 			filename: "../public/styles/pixel-art.png",
 			prompt:   subject + " Retro pixel art style, 16-bit video game graphics, pixelated.",
 		},
-		{
-			filename: "../public/styles/peanuts.png",
-			prompt:   subject + " In the art style of Peanuts comic strip by Charles Schulz, simple line drawings with minimal shading.",
-		},
 	}
 
 	for _, style := range styles {

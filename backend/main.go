@@ -65,7 +65,6 @@ var styles = map[string]string{
 	"claymation": "Claymation style like Wallace and Gromit, 3D clay figures with visible texture, stop-motion animation look. Do not include any text or words in the image.",
 	"legos":      "Made entirely of LEGO bricks, blocky LEGO minifigure style characters, bright plastic colors. Do not include any text or words in the image.",
 	"pixel-art":  "Retro pixel art style, 16-bit video game graphics, pixelated characters and backgrounds. Do not include any text or words in the image.",
-	"peanuts":    "In the art style of Peanuts comic strip by Charles Schulz, simple line drawings with minimal shading. Do not include any text or words in the image.",
 }
 
 type GenerateRequest struct {
