@@ -60,7 +60,7 @@ func main() {
 		},
 		{
 			filename: "../public/styles/pixel-art.png",
-			prompt:   subject + " Retro pixel art style, 16-bit video game graphics, pixelated.",
+			prompt:   subject + " 8-bit pixel art style, very blocky and pixelated like classic NES video games, limited color palette, large visible pixels.",
 		},
 	}
 
