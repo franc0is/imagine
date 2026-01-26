@@ -207,18 +207,28 @@ func handleGenerate(w http.ResponseWriter, r *http.Request) {
 		log.Printf("DEBUG: Found setting %s -> %s", req.Setting, settingDescription)
 	}
 
+	// Get style description early so we can use it in scenario generation
+	styleDescription := styles[req.Style]
+	if styleDescription == "" {
+		styleDescription = styles["default"]
+	}
+	log.Printf("DEBUG: Using style: %s", styleDescription)
+
 	// Step 1: Generate scenario using text model
 	textModel := client.GenerativeModel("gemini-2.0-flash")
 	scenarioPrompt := fmt.Sprintf(`You are creating a fun scene for a children's picture.
 
 Characters: %s
 Setting: %s
+Art Style: %s
 
 In 1-2 short sentences, describe a fun, wholesome activity these characters could be doing together in this setting. Keep it simple, cheerful, and appropriate for young children. Focus on friendship and fun.
 
-IMPORTANT: When mentioning each character, always include which show they are from in parentheses, e.g. "Snoopy (from Peanuts)" or "Thomas (from Thomas the Tank Engine)". This helps the image generator know exactly which character to draw.
+IMPORTANT:
+- When mentioning each character, always include which show they are from in parentheses, e.g. "Snoopy (from Peanuts)" or "Thomas (from Thomas the Tank Engine)". This helps the image generator know exactly which character to draw.
+- Keep the description compatible with the art style (e.g., don't mention specific colors if the style is black and white)
 
-Respond with ONLY the scene description, nothing else.`, characterDescriptions, settingDescription)
+Respond with ONLY the scene description, nothing else.`, characterDescriptions, settingDescription, styleDescription)
 
 	scenarioResp, err := textModel.GenerateContent(ctx, genai.Text(scenarioPrompt))
 	if err != nil {
@@ -234,16 +244,12 @@ Respond with ONLY the scene description, nothing else.`, characterDescriptions, 
 	}
 
 	// Step 2: Generate image using raw HTTP API (SDK doesn't support responseModalities yet)
-	styleDescription := styles[req.Style]
-	if styleDescription == "" {
-		styleDescription = styles["default"]
-	}
+	imagePrompt := fmt.Sprintf(`%s
 
-	imagePrompt := fmt.Sprintf(`Create a colorful children's book illustration:
-
+Create a children's illustration showing:
 %s
 
-Style: %s`, scenario, styleDescription)
+Do not include any text or words in the image.`, styleDescription, scenario)
 
 	imageBase64, err := generateImageRaw(apiKey, imagePrompt)
 	if err != nil {
