@@ -47,6 +47,15 @@ const SETTINGS = [
   { id: "rollercoaster", name: "Rollercoaster", emoji: "🎢" },
 ];
 
+const STYLES = [
+  { id: "default", name: "Default", image: "/styles/default.png" },
+  { id: "coloring", name: "Coloring", image: "/styles/coloring.png" },
+  { id: "claymation", name: "Claymation", image: "/styles/claymation.png" },
+  { id: "legos", name: "Legos", image: "/styles/legos.png" },
+  { id: "pixel-art", name: "Pixel Art", image: "/styles/pixel-art.png" },
+  { id: "peanuts", name: "Peanuts", image: "/styles/peanuts.png" },
+];
+
 type GenerationStatus = "idle" | "thinking" | "painting" | "done" | "error";
 
 interface GeneratedImage {
@@ -57,8 +66,10 @@ interface GeneratedImage {
 export default function Home() {
   const [selectedCharacters, setSelectedCharacters] = useState<string[]>([]);
   const [selectedSetting, setSelectedSetting] = useState<string | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<string>("default");
   const [charactersExpanded, setCharactersExpanded] = useState(true);
   const [settingsExpanded, setSettingsExpanded] = useState(true);
+  const [stylesExpanded, setStylesExpanded] = useState(false);
 
   const [status, setStatus] = useState<GenerationStatus>("idle");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -82,6 +93,10 @@ export default function Home() {
 
   const selectSetting = (id: string) => {
     setSelectedSetting((prev) => (prev === id ? null : id));
+  };
+
+  const selectStyle = (id: string) => {
+    setSelectedStyle(id);
   };
 
   const canGenerate =
@@ -112,6 +127,7 @@ export default function Home() {
         body: JSON.stringify({
           characters: selectedCharacters,
           setting: selectedSetting,
+          style: selectedStyle,
         }),
       });
 
@@ -381,6 +397,63 @@ export default function Home() {
                     title={setting.name}
                   >
                     {setting.emoji}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Styles Section */}
+        <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+          <button
+            onClick={() => setStylesExpanded(!stylesExpanded)}
+            className="w-full p-4 flex items-center justify-between bg-gradient-to-r from-kid-purple to-kid-pink text-white font-bold text-xl"
+          >
+            <span className="flex items-center gap-2">
+              <span className="text-2xl">🎨</span>
+              Styles
+              <span className="bg-white/30 px-2 py-0.5 rounded-full text-sm">
+                1/1
+              </span>
+            </span>
+            <span
+              className="text-2xl transition-transform"
+              style={{
+                transform: stylesExpanded ? "rotate(180deg)" : "rotate(0)",
+              }}
+            >
+              ▼
+            </span>
+          </button>
+
+          {stylesExpanded && (
+            <div className="p-4 grid grid-cols-4 gap-3">
+              {STYLES.map((style) => {
+                const isSelected = selectedStyle === style.id;
+
+                return (
+                  <button
+                    key={style.id}
+                    onClick={() => selectStyle(style.id)}
+                    className={`
+                      w-16 h-16 rounded-full overflow-hidden
+                      transition-all duration-200 border-4
+                      ${
+                        isSelected
+                          ? "border-kid-purple scale-110 shadow-lg ring-2 ring-kid-purple ring-offset-2"
+                          : "border-kid-pink/20 hover:border-kid-pink/50 hover:scale-105"
+                      }
+                    `}
+                    title={style.name}
+                  >
+                    <Image
+                      src={style.image}
+                      alt={style.name}
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 );
               })}

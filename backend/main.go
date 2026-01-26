@@ -59,9 +59,19 @@ var settings = map[string]string{
 	"rollercoaster": "a thrilling rollercoaster park with exciting rides and attractions",
 }
 
+var styles = map[string]string{
+	"default":    "Bright, cheerful cartoon illustration for children. Safe and appropriate for kids. Do not include any text or words in the image.",
+	"coloring":   "Black and white line art coloring page with clear outlines, no colors filled in, suitable for children to color. Do not include any text or words in the image.",
+	"claymation": "Claymation style like Wallace and Gromit, 3D clay figures with visible texture, stop-motion animation look. Do not include any text or words in the image.",
+	"legos":      "Made entirely of LEGO bricks, blocky LEGO minifigure style characters, bright plastic colors. Do not include any text or words in the image.",
+	"pixel-art":  "Retro pixel art style, 16-bit video game graphics, pixelated characters and backgrounds. Do not include any text or words in the image.",
+	"peanuts":    "In the art style of Peanuts comic strip by Charles Schulz, simple line drawings with minimal shading. Do not include any text or words in the image.",
+}
+
 type GenerateRequest struct {
 	Characters []string `json:"characters"`
 	Setting    string   `json:"setting"`
+	Style      string   `json:"style"`
 }
 
 type GenerateResponse struct {
@@ -226,11 +236,16 @@ Respond with ONLY the scene description, nothing else.`, characterDescriptions, 
 	}
 
 	// Step 2: Generate image using raw HTTP API (SDK doesn't support responseModalities yet)
+	styleDescription := styles[req.Style]
+	if styleDescription == "" {
+		styleDescription = styles["default"]
+	}
+
 	imagePrompt := fmt.Sprintf(`Create a colorful children's book illustration:
 
 %s
 
-Style: Bright, cheerful cartoon illustration for children. Safe and appropriate for kids. Do not include any text or words in the image.`, scenario)
+Style: %s`, scenario, styleDescription)
 
 	imageBase64, err := generateImageRaw(apiKey, imagePrompt)
 	if err != nil {
