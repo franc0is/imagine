@@ -281,6 +281,9 @@ func generateImageRaw(apiKey, prompt string) (string, error) {
 		},
 		"generationConfig": map[string]interface{}{
 			"responseModalities": []string{"IMAGE", "TEXT"},
+			"imageConfig": map[string]interface{}{
+				"aspectRatio": "4:3",
+			},
 		},
 	}
 
