@@ -1,7 +1,7 @@
 //go:build ignore
 
 // Script to generate style preview images using the Gemini API.
-// Run from the project root: go run scripts/generate_styles.go
+// Run from the backend directory: cd backend && go run ../scripts/generate_styles.go
 
 package main
 
@@ -23,9 +23,12 @@ type StylePrompt struct {
 }
 
 func main() {
+	// Try loading .env from current dir, parent dir, or backend dir
 	if err := godotenv.Load(); err != nil {
-		if err := godotenv.Load(".env"); err != nil {
-			fmt.Println("No .env file found")
+		if err := godotenv.Load("../.env"); err != nil {
+			if err := godotenv.Load("backend/.env"); err != nil {
+				fmt.Println("No .env file found")
+			}
 		}
 	}
 
@@ -35,30 +38,33 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Base subject for all styles - close-up face portrait for consistency
+	subject := "Close-up portrait of Bluey (from the TV show Bluey), a blue heeler puppy with a happy smiling face, looking at the viewer. Head and face only, simple background."
+
 	styles := []StylePrompt{
 		{
-			filename: "public/styles/default.png",
-			prompt:   "A friendly cartoon dog playing in a park. Bright, cheerful cartoon illustration for children, colorful and whimsical.",
+			filename: "../public/styles/default.png",
+			prompt:   subject + " Bright, cheerful cartoon illustration for children, colorful and whimsical.",
 		},
 		{
-			filename: "public/styles/coloring.png",
-			prompt:   "A friendly cartoon dog playing in a park. Black and white line art coloring page with clear outlines, no colors filled in.",
+			filename: "../public/styles/coloring.png",
+			prompt:   subject + " Black and white line art coloring page with clear outlines, no colors filled in, suitable for children to color.",
 		},
 		{
-			filename: "public/styles/claymation.png",
-			prompt:   "A friendly cartoon dog playing in a park. Claymation style like Wallace and Gromit, 3D clay figures with visible texture.",
+			filename: "../public/styles/claymation.png",
+			prompt:   subject + " Claymation style like Wallace and Gromit, 3D clay figures with visible texture, stop-motion animation look.",
 		},
 		{
-			filename: "public/styles/legos.png",
-			prompt:   "A friendly cartoon dog playing in a park. Made entirely of LEGO bricks, blocky style, bright plastic colors.",
+			filename: "../public/styles/legos.png",
+			prompt:   subject + " Made entirely of LEGO bricks, blocky LEGO minifigure style, bright plastic colors.",
 		},
 		{
-			filename: "public/styles/pixel-art.png",
-			prompt:   "A friendly cartoon dog playing in a park. Retro pixel art style, 16-bit video game graphics.",
+			filename: "../public/styles/pixel-art.png",
+			prompt:   subject + " Retro pixel art style, 16-bit video game graphics, pixelated.",
 		},
 		{
-			filename: "public/styles/peanuts.png",
-			prompt:   "A friendly cartoon dog playing in a park. In the art style of Peanuts comic strip by Charles Schulz, simple line drawings.",
+			filename: "../public/styles/peanuts.png",
+			prompt:   subject + " In the art style of Peanuts comic strip by Charles Schulz, simple line drawings with minimal shading.",
 		},
 	}
 
