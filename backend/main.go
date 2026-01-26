@@ -64,7 +64,6 @@ var styles = map[string]string{
 	"coloring":   "Black and white line art coloring page with clear outlines, no colors filled in, suitable for children to color. Do not include any text or words in the image.",
 	"claymation": "Claymation style like Wallace and Gromit, 3D clay figures with visible texture, stop-motion animation look. Do not include any text or words in the image.",
 	"legos":      "Made entirely of LEGO bricks, blocky LEGO minifigure style characters, bright plastic colors. Do not include any text or words in the image.",
-	"pixel-art":  "8-bit pixel art style, very blocky and pixelated like classic NES video games, limited color palette, large visible pixels. Do not include any text or words in the image.",
 }
 
 type GenerateRequest struct {

@@ -52,7 +52,6 @@ const STYLES = [
   { id: "coloring", name: "Coloring", image: "/styles/coloring.png" },
   { id: "claymation", name: "Claymation", image: "/styles/claymation.png" },
   { id: "legos", name: "Legos", image: "/styles/legos.png" },
-  { id: "pixel-art", name: "Pixel Art", image: "/styles/pixel-art.png" },
 ];
 
 type GenerationStatus = "idle" | "thinking" | "painting" | "done" | "error";

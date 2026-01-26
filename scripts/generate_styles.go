@@ -58,10 +58,6 @@ func main() {
 			filename: "../public/styles/legos.png",
 			prompt:   subject + " Made entirely of LEGO bricks, blocky LEGO minifigure style, bright plastic colors.",
 		},
-		{
-			filename: "../public/styles/pixel-art.png",
-			prompt:   subject + " 8-bit pixel art style, very blocky and pixelated like classic NES video games, limited color palette, large visible pixels.",
-		},
 	}
 
 	for _, style := range styles {
