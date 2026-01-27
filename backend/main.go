@@ -61,7 +61,7 @@ var settings = map[string]string{
 
 var styles = map[string]string{
 	"default":    "Bright, cheerful cartoon illustration for children. Safe and appropriate for kids. Do not include any text or words in the image.",
-	"coloring":   "Black and white line art coloring page with clear outlines, no colors filled in, suitable for children to color. Do not include any text or words in the image.",
+	"coloring":   "Black and white line art coloring page with clear outlines, no colors filled in, suitable for children to color. Plain white background only - no borders, frames, or decorative edges. Do not include any text or words in the image.",
 	"claymation": "Claymation style like Wallace and Gromit, 3D clay figures with visible texture, stop-motion animation look. Do not include any text or words in the image.",
 	"legos":      "Made entirely of LEGO bricks, blocky LEGO minifigure style characters, bright plastic colors. Do not include any text or words in the image.",
 }
