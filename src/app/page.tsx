@@ -13,7 +13,7 @@ const CHARACTERS = [
   { id: "spin", name: "Spin", image: "/characters/spin.png" },
   { id: "ghost-spider", name: "Ghost-Spider", image: "/characters/ghost-spider.png" },
   { id: "trace-e", name: "Trace-E", image: "/characters/trace-e.png" },
-  { id: "goby", name: "Gobby", image: "/characters/goby.png" },
+  { id: "goby", name: "Green Goblin", image: "/characters/goby.png" },
   { id: "curious-george", name: "George", image: "/characters/curious-george.png" },
   { id: "pete-the-cat", name: "Pete", image: "/characters/pete-the-cat.png" },
   { id: "brother-bear", name: "Brother", image: "/characters/brother-bear.png" },
