@@ -325,14 +325,25 @@ func generateImageRaw(apiKey, prompt string) (string, error) {
 		return "", fmt.Errorf("failed to parse response: %w", err)
 	}
 
-	for _, candidate := range result.Candidates {
-		for _, part := range candidate.Content.Parts {
-			if part.InlineData != nil && strings.HasPrefix(part.InlineData.MimeType, "image/") {
-				return part.InlineData.Data, nil
+	log.Printf("DEBUG: API response has %d candidates", len(result.Candidates))
+	for i, candidate := range result.Candidates {
+		log.Printf("DEBUG: Candidate %d has %d parts", i, len(candidate.Content.Parts))
+		for j, part := range candidate.Content.Parts {
+			if part.InlineData != nil {
+				log.Printf("DEBUG: Part %d has inlineData with mimeType: %s", j, part.InlineData.MimeType)
+				if strings.HasPrefix(part.InlineData.MimeType, "image/") {
+					return part.InlineData.Data, nil
+				}
+			} else if part.Text != "" {
+				log.Printf("DEBUG: Part %d has text: %s", j, part.Text)
+			} else {
+				log.Printf("DEBUG: Part %d is empty or unknown type", j)
 			}
 		}
 	}
 
+	// Log raw response if no image found
+	log.Printf("DEBUG: No image found. Raw response: %s", string(body))
 	return "", fmt.Errorf("no image in response")
 }
 
