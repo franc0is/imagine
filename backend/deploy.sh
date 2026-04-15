@@ -2,66 +2,44 @@
 set -e
 
 # Imagine Deployment Script
-# Deploys to imagine.exe.xyz
+# Deploys to https://imagine.baldassari.me via moulinsart.
+#
+# One-time setup on the VM (run by hand):
+#   ssh moulinsart-prod 'moulinsart new imagine'
+#   Then via `ssh -o 'ProxyCommand=ssh moulinsart-prod moulinsart tunnel imagine' dev@imagine`:
+#     - write /opt/app/.env with GOOGLE_AI_API_KEY, PORT=8000, STATIC_DIR=/opt/app/public
+#     - write /etc/systemd/system/app.service.d/override.conf with:
+#         [Service]
+#         EnvironmentFile=/opt/app/.env
+#     - sudo systemctl daemon-reload && sudo systemctl restart app
 
-REMOTE_HOST="imagine.exe.xyz"
-REMOTE_DIR="/home/exedev/imagine"
-SERVICE_NAME="imagine"
+SSH_HOST="moulinsart-prod"
+APP_NAME="imagine"
+VM_SSH=(ssh -o "ProxyCommand=ssh ${SSH_HOST} moulinsart tunnel ${APP_NAME}" "dev@${APP_NAME}")
 
 cd "$(dirname "$0")"
 
 echo "==> Building frontend..."
-cd ..
-npm run build
-cd backend
+(cd .. && npm run build)
 
-echo "==> Building for Linux x86_64..."
+echo "==> Building backend for Linux x86_64..."
 GOOS=linux GOARCH=amd64 go build -o imagine-linux-amd64
 
-echo "==> Creating remote directories..."
-ssh "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}/bin ${REMOTE_DIR}/out"
+echo "==> Uploading static assets to /opt/app/public..."
+rsync -azP --delete \
+  -e "ssh -o ProxyCommand=\"ssh ${SSH_HOST} moulinsart tunnel ${APP_NAME}\"" \
+  ../out/ "dev@${APP_NAME}:/opt/app/public/"
 
-echo "==> Copying binary to ${REMOTE_HOST}..."
-scp imagine-linux-amd64 "${REMOTE_HOST}:${REMOTE_DIR}/bin/imagine.new"
+echo "==> Uploading binary to host tmp..."
+scp imagine-linux-amd64 "${SSH_HOST}:/tmp/imagine"
 
-echo "==> Copying service file..."
-scp imagine.service "${REMOTE_HOST}:${REMOTE_DIR}/"
+echo "==> Deploying via moulinsart CLI..."
+ssh "${SSH_HOST}" "moulinsart deploy ${APP_NAME} /tmp/imagine"
 
-echo "==> Copying static files..."
-rsync -av --delete ../out/ "${REMOTE_HOST}:${REMOTE_DIR}/out/"
+echo "==> Health check..."
+curl -fsS "https://${APP_NAME}.baldassari.me/health" && echo " - OK"
 
-echo "==> Copying .env file..."
-scp ../.env "${REMOTE_HOST}:${REMOTE_DIR}/.env"
-
-echo "==> Deploying on remote host..."
-ssh "${REMOTE_HOST}" bash -s << 'EOF'
-set -e
-cd /home/exedev/imagine
-
-# Swap binaries
-mv bin/imagine.new bin/imagine
-chmod +x bin/imagine
-
-# Update service file and restart
-sudo ln -sf ~/imagine/imagine.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl restart imagine
-
-# Wait and check status
-sleep 2
-if sudo systemctl is-active --quiet imagine; then
-    echo "==> Service restarted successfully"
-    curl -s http://localhost:8080/health && echo " - Health check passed"
-else
-    echo "==> Service failed to start!"
-    sudo systemctl status imagine
-    exit 1
-fi
-EOF
-
+rm -f imagine-linux-amd64
 echo ""
 echo "==> Deployment complete!"
-echo "==> Visit https://imagine.exe.xyz"
-
-# Cleanup local binary
-rm -f imagine-linux-amd64
+echo "==> Visit https://${APP_NAME}.baldassari.me"
