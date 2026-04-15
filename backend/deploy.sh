@@ -1,45 +1,36 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-# Imagine Deployment Script
-# Deploys to https://imagine.baldassari.me via moulinsart.
+# Deploys imagine to moulinsart (https://imagine.baldassari.me).
+# Builds the Next.js static export, syncs it to /opt/app/public/, then
+# atomically swaps the linux/amd64 binary via `moulinsart deploy`.
 #
-# One-time setup on the VM (run by hand):
+# One-time bootstrap (already done; here for reference):
 #   ssh moulinsart-prod 'moulinsart new imagine'
-#   Then via `ssh -o 'ProxyCommand=ssh moulinsart-prod moulinsart tunnel imagine' dev@imagine`:
-#     - write /opt/app/.env with GOOGLE_AI_API_KEY, PORT=8000, STATIC_DIR=/opt/app/public
-#     - write /etc/systemd/system/app.service.d/override.conf with:
-#         [Service]
-#         EnvironmentFile=/opt/app/.env
-#     - sudo systemctl daemon-reload && sudo systemctl restart app
-
-SSH_HOST="moulinsart-prod"
-APP_NAME="imagine"
-VM_SSH=(ssh -o "ProxyCommand=ssh ${SSH_HOST} moulinsart tunnel ${APP_NAME}" "dev@${APP_NAME}")
+#   ssh imagine.baldassari.me 'cat > /opt/app/.env' < .env  # GOOGLE_AI_API_KEY, PORT=8000, STATIC_DIR=/opt/app/public
 
 cd "$(dirname "$0")"
+
+NAME=imagine
+HOST=imagine.baldassari.me
+JUMP=moulinsart-prod
 
 echo "==> Building frontend..."
 (cd .. && npm run build)
 
-echo "==> Building backend for Linux x86_64..."
-GOOS=linux GOARCH=amd64 go build -o imagine-linux-amd64
+echo "==> Building linux/amd64..."
+GOOS=linux GOARCH=amd64 go build -o /tmp/imagine .
 
-echo "==> Uploading static assets to /opt/app/public..."
-rsync -azP --delete \
-  -e "ssh -o ProxyCommand=\"ssh ${SSH_HOST} moulinsart tunnel ${APP_NAME}\"" \
-  ../out/ "dev@${APP_NAME}:/opt/app/public/"
+echo "==> Syncing static files to ${HOST}:/opt/app/public/..."
+rsync -azP --delete ../out/ "${HOST}:/opt/app/public/"
 
-echo "==> Uploading binary to host tmp..."
-scp imagine-linux-amd64 "${SSH_HOST}:/tmp/imagine"
+echo "==> Deploying binary via ${JUMP}..."
+scp /tmp/imagine "${JUMP}:/tmp/imagine"
+ssh "${JUMP}" "moulinsart deploy ${NAME} /tmp/imagine && rm /tmp/imagine"
 
-echo "==> Deploying via moulinsart CLI..."
-ssh "${SSH_HOST}" "moulinsart deploy ${APP_NAME} /tmp/imagine"
+rm -f /tmp/imagine
 
 echo "==> Health check..."
-curl -fsS "https://${APP_NAME}.baldassari.me/health" && echo " - OK"
+curl -fsS "https://${HOST}/health" && echo " - OK"
 
-rm -f imagine-linux-amd64
-echo ""
-echo "==> Deployment complete!"
-echo "==> Visit https://${APP_NAME}.baldassari.me"
+echo "==> Live at https://${HOST}"
